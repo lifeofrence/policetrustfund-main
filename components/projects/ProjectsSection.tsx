@@ -11,6 +11,7 @@ import {
   FaArrowRight,
   FaFilter,
 } from "react-icons/fa";
+import { apiGet } from "@/lib/api";
 import StatsSection from "../homepage/StatsSection";
 
 interface Project {
@@ -39,9 +40,7 @@ const ProjectsSection = () => {
 
   const fetchProjects = async () => {
     try {
-      const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000/api/v1';
-      const response = await fetch(`${API_BASE_URL}/projects`);
-      const data = await response.json();
+      const data = await apiGet<Project[]>('/projects', false);
       setProjects(data);
     } catch (error) {
       console.error('Error fetching projects:', error);

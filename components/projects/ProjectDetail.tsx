@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { FaCalendarAlt, FaMapMarkerAlt, FaUsers, FaArrowLeft, FaCheck } from "react-icons/fa";
+import { apiGet } from "@/lib/api";
 import { useParams } from "next/navigation";
 
 interface Project {
@@ -36,14 +37,7 @@ const ProjectDetail = () => {
 
     const fetchProject = async () => {
         try {
-            const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000/api/v1';
-            const response = await fetch(`${API_BASE_URL}/projects/${id}`);
-
-            if (!response.ok) {
-                throw new Error("Project not found");
-            }
-
-            const data = await response.json();
+            const data = await apiGet<any>(`/projects/${id}`, false);
             setProject(data.data || data);
         } catch (err) {
             console.error('Error fetching project:', err);

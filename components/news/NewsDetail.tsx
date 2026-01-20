@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { FaClock, FaUser, FaArrowLeft, FaCalendarAlt, FaShareAlt, FaFacebookF, FaTwitter, FaLinkedinIn } from "react-icons/fa";
+import { apiGet } from "@/lib/api";
 import { useParams } from "next/navigation";
 
 interface NewsArticle {
@@ -33,14 +34,7 @@ const NewsDetail = () => {
 
     const fetchArticle = async () => {
         try {
-            const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000/api/v1';
-            const response = await fetch(`${API_BASE_URL}/news/${id}`);
-
-            if (!response.ok) {
-                throw new Error("News article not found");
-            }
-
-            const data = await response.json();
+            const data = await apiGet<any>(`/news/${id}`, false);
             setArticle(data.data || data); // Handle both {data: ...} and direct object
         } catch (err) {
             console.error('Error fetching news:', err);

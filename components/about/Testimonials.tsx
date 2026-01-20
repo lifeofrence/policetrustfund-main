@@ -7,6 +7,7 @@ import {
   FaChevronRight,
   FaStar,
 } from "react-icons/fa";
+import { apiGet } from "@/lib/api";
 
 interface Testimonial {
   id: number;
@@ -27,9 +28,7 @@ const Testimonials = () => {
   useEffect(() => {
     const fetchTestimonials = async () => {
       try {
-        const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000/api/v1';
-        const response = await fetch(`${API_BASE_URL}/testimonials`);
-        const data = await response.json();
+        const data = await apiGet<Testimonial[]>('/testimonials', false);
         setTestimonials(data);
       } catch (error) {
         console.error('Error fetching testimonials:', error);
@@ -95,8 +94,8 @@ const Testimonials = () => {
       <FaStar
         key={index}
         className={`w-4 h-4 ${index < rating
-            ? "text-[#0B1120] fill-current"
-            : "text-[#0B1120] fill-none"
+          ? "text-[#0B1120] fill-current"
+          : "text-[#0B1120] fill-none"
           }`}
       />
     ));
@@ -243,8 +242,8 @@ const Testimonials = () => {
               key={index}
               onClick={() => handleDotClick(index)}
               className={`transition-all duration-300 ${index === currentIndex
-                  ? "w-3 h-3 bg-blue-600"
-                  : "w-2 h-2 bg-blue-600 rounded-full opacity-50 hover:opacity-75"
+                ? "w-3 h-3 bg-blue-600"
+                : "w-2 h-2 bg-blue-600 rounded-full opacity-50 hover:opacity-75"
                 }`}
               style={
                 index === currentIndex

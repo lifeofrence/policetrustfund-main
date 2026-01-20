@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import { FaClock, FaUser, FaArrowRight, FaSearch } from "react-icons/fa";
+import { apiGet } from "@/lib/api";
 
 interface NewsArticle {
   id: number;
@@ -28,9 +29,7 @@ const NewsSection = () => {
 
   const fetchNews = async () => {
     try {
-      const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000/api/v1';
-      const response = await fetch(`${API_BASE_URL}/news?per_page=100`);
-      const data = await response.json();
+      const data = await apiGet<any>('/news?per_page=100', false);
 
       // Filter only published articles
       const publishedArticles = data.data.filter((article: NewsArticle) => article.published_at);

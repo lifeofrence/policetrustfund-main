@@ -12,6 +12,7 @@ import {
   FaChevronRight,
   FaChevronDown,
 } from "react-icons/fa";
+import { apiGet } from "@/lib/api";
 import { HiOutlineGlobeAlt } from "react-icons/hi";
 
 interface SubMenuItem {
@@ -43,9 +44,7 @@ const NavBar = () => {
 
   const fetchLatestNews = async () => {
     try {
-      const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000/api/v1';
-      const response = await fetch(`${API_BASE_URL}/news?per_page=1`);
-      const data = await response.json();
+      const data = await apiGet<any>('/news?per_page=1', false);
 
       if (data.data && data.data.length > 0) {
         const publishedArticles = data.data.filter((article: any) => article.published_at);

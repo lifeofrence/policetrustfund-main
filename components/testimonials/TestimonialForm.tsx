@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { FaStar, FaPaperPlane } from "react-icons/fa";
+import { apiPost } from "@/lib/api";
 
 const TestimonialForm = () => {
     const [formData, setFormData] = useState({
@@ -42,46 +43,28 @@ const TestimonialForm = () => {
         setSubmitStatus({ type: null, message: "" });
 
         try {
-            const API_BASE_URL =
-                process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000/api/v1";
-            const response = await fetch(`${API_BASE_URL}/testimonials`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Accept: "application/json",
-                },
-                body: JSON.stringify(formData),
+            const data = await apiPost<any>('/testimonials', formData, false);
+
+            setSubmitStatus({
+                type: "success",
+                message:
+                    data.message ||
+                    "Thank you for your testimonial! It will be reviewed and published soon.",
             });
-
-            const data = await response.json();
-
-            if (response.ok) {
-                setSubmitStatus({
-                    type: "success",
-                    message:
-                        data.message ||
-                        "Thank you for your testimonial! It will be reviewed and published soon.",
-                });
-                // Reset form
-                setFormData({
-                    name: "",
-                    email: "",
-                    position: "",
-                    organization: "",
-                    content: "",
-                    rating: 5,
-                });
-            } else {
-                setSubmitStatus({
-                    type: "error",
-                    message: data.message || "Failed to submit testimonial. Please try again.",
-                });
-            }
-        } catch (error) {
+            // Reset form
+            setFormData({
+                name: "",
+                email: "",
+                position: "",
+                organization: "",
+                content: "",
+                rating: 5,
+            });
+        } catch (error: any) {
             console.error("Testimonial form error:", error);
             setSubmitStatus({
                 type: "error",
-                message: "An error occurred. Please try again later.",
+                message: error.message || "An error occurred. Please try again later.",
             });
         } finally {
             setIsSubmitting(false);
@@ -114,8 +97,8 @@ const TestimonialForm = () => {
                     {submitStatus.type && (
                         <div
                             className={`mb-6 p-4 rounded-lg ${submitStatus.type === "success"
-                                    ? "bg-green-50 border border-green-200 text-green-800"
-                                    : "bg-red-50 border border-red-200 text-red-800"
+                                ? "bg-green-50 border border-green-200 text-green-800"
+                                : "bg-red-50 border border-red-200 text-red-800"
                                 }`}
                             style={{ fontFamily: "var(--font-work-sans), sans-serif" }}
                         >
@@ -229,8 +212,8 @@ const TestimonialForm = () => {
                                     >
                                         <FaStar
                                             className={`w-8 h-8 ${star <= formData.rating
-                                                    ? "text-yellow-400"
-                                                    : "text-gray-300"
+                                                ? "text-yellow-400"
+                                                : "text-gray-300"
                                                 }`}
                                         />
                                     </button>

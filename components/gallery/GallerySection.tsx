@@ -10,6 +10,7 @@ import {
   FaChevronLeft,
   FaChevronRight,
 } from "react-icons/fa";
+import { apiGet } from "@/lib/api";
 
 interface GalleryItem {
   id: number;
@@ -41,16 +42,12 @@ const GallerySection = () => {
 
   const fetchGallery = async () => {
     try {
-      const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000/api/v1';
-
       // Fetch gallery items
-      const itemsResponse = await fetch(`${API_BASE_URL}/gallery`);
-      const items = await itemsResponse.json();
+      const items = await apiGet<GalleryItem[]>('/gallery', false);
       setGalleryItems(items);
 
       // Fetch event names
-      const eventsResponse = await fetch(`${API_BASE_URL}/gallery/events/list`);
-      const eventNames = await eventsResponse.json();
+      const eventNames = await apiGet<string[]>('/gallery/events/list', false);
       setEvents(eventNames);
     } catch (error) {
       console.error('Error fetching gallery:', error);
