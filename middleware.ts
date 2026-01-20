@@ -10,14 +10,15 @@ export function middleware(request: NextRequest) {
 
     // Check if the route is an admin route (except login)
     if (pathname.startsWith('/admin') && !pathname.startsWith('/admin/login')) {
-        // Check for auth token in cookies or headers
+        // Check for auth token in cookies
         const token = request.cookies.get('admin_token')?.value;
 
-        // For client-side routing, we'll rely on the AuthProvider
-        // This middleware primarily handles direct URL access
-        // The actual auth check happens in the AuthProvider component
+        if (!token) {
+            // Redirect to login if token is missing
+            const loginUrl = new URL('/admin/login', request.url);
+            return NextResponse.redirect(loginUrl);
+        }
 
-        // Allow the request to proceed - client-side auth will handle it
         return NextResponse.next();
     }
 

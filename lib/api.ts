@@ -10,25 +10,57 @@ interface RequestOptions extends RequestInit {
 }
 
 /**
- * Get authentication token from localStorage
+ * Helper to manage cookies for auth token
+ */
+const COOKIE_NAME = 'admin_token';
+
+function setCookie(name: string, value: string, days: number = 7) {
+    if (typeof document === 'undefined') return;
+    const date = new Date();
+    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+    const expires = "; expires=" + date.toUTCString();
+    document.cookie = name + "=" + (value || "") + expires + "; path=/; SameSite=Lax";
+}
+
+function getCookie(name: string): string | null {
+    if (typeof document === 'undefined') return null;
+    const nameEQ = name + "=";
+    const ca = document.cookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+}
+
+function removeCookie(name: string) {
+    if (typeof document === 'undefined') return;
+    document.cookie = name + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+}
+
+/**
+ * Get authentication token from cookies or localStorage
  */
 function getAuthToken(): string | null {
     if (typeof window === 'undefined') return null;
-    return localStorage.getItem('admin_token');
+    return getCookie(COOKIE_NAME) || localStorage.getItem(COOKIE_NAME);
 }
 
 /**
- * Set authentication token in localStorage
+ * Set authentication token in cookies and localStorage
  */
 export function setAuthToken(token: string): void {
-    localStorage.setItem('admin_token', token);
+    setCookie(COOKIE_NAME, token);
+    localStorage.setItem(COOKIE_NAME, token);
 }
 
 /**
- * Remove authentication token from localStorage
+ * Remove authentication token from cookies and localStorage
  */
 export function removeAuthToken(): void {
-    localStorage.removeItem('admin_token');
+    removeCookie(COOKIE_NAME);
+    localStorage.removeItem(COOKIE_NAME);
 }
 
 /**
