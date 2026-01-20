@@ -98,10 +98,9 @@ export default function AdminDashboard() {
                 {statCards.map((card) => {
                     const Icon = card.icon;
                     return (
-                        <a
+                        <div
                             key={card.label}
-                            href={card.href}
-                            className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow border border-gray-100"
+                            className="bg-white rounded-xl shadow-md p-6 border border-gray-100"
                         >
                             <div className="flex items-center justify-between">
                                 <div>
@@ -112,13 +111,13 @@ export default function AdminDashboard() {
                                     <Icon className="w-6 h-6 text-white" />
                                 </div>
                             </div>
-                        </a>
+                        </div>
                     );
                 })}
             </div>
 
-            {/* Quick Actions */}
-            {quickActions.length > 0 && (
+            {/* Quick Actions - Temporarily Disabled */}
+            {/* {quickActions.length > 0 && (
                 <div className="mt-8 bg-white rounded-xl shadow-md p-6 border border-gray-100">
                     <h2 className="text-xl font-bold text-gray-900 mb-4">Quick Actions</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -137,7 +136,7 @@ export default function AdminDashboard() {
                         })}
                     </div>
                 </div>
-            )}
+            )} */}
         </div>
     );
 }
