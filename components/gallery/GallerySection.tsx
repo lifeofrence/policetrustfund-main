@@ -43,12 +43,13 @@ const GallerySection = () => {
   const fetchGallery = async () => {
     try {
       // Fetch gallery items
-      const items = await apiGet<GalleryItem[]>('/gallery', false);
+      const itemsData = await apiGet<any>('/gallery', false);
+      const items = itemsData.data || itemsData;
       setGalleryItems(items);
 
-      // Fetch event names
+      // Fetch event list
       const eventNames = await apiGet<string[]>('/gallery/events/list', false);
-      setEvents(eventNames);
+      setEvents(["all", ...eventNames]);
     } catch (error) {
       console.error('Error fetching gallery:', error);
     } finally {

@@ -8,6 +8,7 @@ import {
   FaStar,
   FaUser,
 } from "react-icons/fa";
+import { apiGet } from "@/lib/api";
 
 interface Testimonial {
   id: number;
@@ -35,10 +36,9 @@ const TestimonialsPage = () => {
 
   const fetchTestimonials = async () => {
     try {
-      const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000/api/v1';
-      const response = await fetch(`${API_BASE_URL}/testimonials`);
-      const data = await response.json();
-      setTestimonials(data);
+      const data = await apiGet<any>('/testimonials', false);
+      const items = data.data || data;
+      setTestimonials(items);
     } catch (error) {
       console.error('Error fetching testimonials:', error);
     } finally {
@@ -87,8 +87,8 @@ const TestimonialsPage = () => {
       <FaStar
         key={index}
         className={`w-4 h-4 ${index < rating
-            ? "text-[#006400] fill-current"
-            : "text-gray-300 fill-current"
+          ? "text-[#006400] fill-current"
+          : "text-gray-300 fill-current"
           }`}
       />
     ));
@@ -253,8 +253,8 @@ const TestimonialsPage = () => {
                 key={index}
                 onClick={() => handleDotClick(index)}
                 className={`transition-all duration-300 ${index === currentIndex
-                    ? "w-3 h-3 bg-[#006400] rounded-full"
-                    : "w-2 h-2 bg-[#006400] rounded-full opacity-40 hover:opacity-60"
+                  ? "w-3 h-3 bg-[#006400] rounded-full"
+                  : "w-2 h-2 bg-[#006400] rounded-full opacity-40 hover:opacity-60"
                   }`}
                 aria-label={`Go to testimonial ${index + 1}`}
               />
@@ -276,10 +276,10 @@ const TestimonialsPage = () => {
                 <div
                   key={testimonial.id}
                   className={`bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 p-6 sm:p-8 border-l-4 ${index % 3 === 0
-                      ? "border-[#006400]"
-                      : index % 3 === 1
-                        ? "border-blue-500"
-                        : "border-yellow-500"
+                    ? "border-[#006400]"
+                    : index % 3 === 1
+                      ? "border-blue-500"
+                      : "border-yellow-500"
                     } cursor-pointer hover:-translate-y-2`}
                   onClick={() => {
                     setCurrentIndex(index);
